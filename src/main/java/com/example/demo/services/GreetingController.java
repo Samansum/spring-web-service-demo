@@ -1,6 +1,8 @@
 package com.example.demo.services;
 
 import com.example.demo.models.Greeting;
+import com.example.demo.models.GreetingRecord;
+import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpEntity;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class GreetingController {
 
+  private final AtomicLong counter = new AtomicLong();
+
   @GetMapping("/hello")
   public HttpEntity<Greeting> hlo(
     @RequestParam(value = "name", defaultValue = "world") String name) {
@@ -22,6 +26,17 @@ public class GreetingController {
       WebMvcLinkBuilder.methodOn(GreetingController.class).hlo(name)).withSelfRel();
 
     greeting.add(link);
+
+    return new ResponseEntity<>(greeting, HttpStatus.OK);
+  }
+
+  @GetMapping("/greeting")
+  public HttpEntity<GreetingRecord> greeting(
+    @RequestParam(value = "name", defaultValue = "buddy") String name) {
+    GreetingRecord greeting = new GreetingRecord(
+      counter.incrementAndGet(),
+      String.format("Hello %s!", name)
+    );
 
     return new ResponseEntity<>(greeting, HttpStatus.OK);
   }
