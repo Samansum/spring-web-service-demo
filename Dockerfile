@@ -20,6 +20,8 @@ WORKDIR /app
 # Copy the compiled JAR from Stage 1 using standard wildcard matching
 COPY --from=builder /demo/build/libs/*.jar app.jar
 
-EXPOSE 9090
+# Expose HTTP port and JVM Debug port
+EXPOSE 9090 5005
 
-ENTRYPOINT ["java", "-XX:MaxRAMPercentage=75.0", "-jar", "app.jar"]
+# Pass JDWP flags to open debug socket on port 5005
+ENTRYPOINT ["java", "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005", "-XX:MaxRAMPercentage=75.0", "-jar", "app.jar"]
