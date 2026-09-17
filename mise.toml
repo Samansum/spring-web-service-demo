@@ -1,0 +1,12 @@
+[tasks.build]
+description = "Build the Spring Boot Docker image"
+run = "docker build -t demo-app ."
+
+[tasks.run]
+description = "Run the Docker container"
+run = "docker run --rm -p 9090:9090 --name demo-container demo-app"
+
+[tasks.dev]
+description = "Build and run the container"
+depends = ["build"]
+run = "docker run --rm -p 9090:9090 --name demo-container demo-app"
