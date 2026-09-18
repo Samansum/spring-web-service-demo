@@ -1,3 +1,6 @@
+[env]
+_.file = ".env"
+
 [tasks.build]
 description = "Build the Spring Boot Docker image"
 run = "docker build -t demo-app ."
